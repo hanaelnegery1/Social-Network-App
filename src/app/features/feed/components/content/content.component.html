@@ -17,17 +17,25 @@
         <p class="truncate text-sm font-bold text-slate-800">
           {{ currentUser?.name }}
         </p>
-        <button
-          type="button"
-          class="mt-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
+        <div
+          class="mt-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 text-xs font-medium text-slate-600"
         >
           <i
             class="fa-solid fa-earth-americas text-[11px]"
             aria-hidden="true"
           ></i>
-          Public
-          <i class="fa-solid fa-chevron-down text-[9px]" aria-hidden="true"></i>
-        </button>
+
+          <div class="relative">
+            <select
+              class="appearance-none bg-transparent pr-4 text-xs font-medium text-slate-600 outline-none border-0"
+              aria-label="Post visibility"
+            >
+              <option value="public">Public</option>
+              <option value="following">Following</option>
+              <option value="only_me">Only Me</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -87,7 +95,7 @@
           />
         </div>
         <div class="min-w-0 flex-1">
-          <div class="flex items-start justify-between gap-3">
+          <div class="relative flex items-start justify-between gap-3">
             <div>
               <p class="text-sm font-bold text-slate-800">
                 {{ post.user.name }}
@@ -109,12 +117,62 @@
               </p>
             </div>
             <button
+              [id]="'post-menu-button-' + post._id"
+              [attr.data-dropdown-toggle]="'post-menu-' + post._id"
+              [attr.aria-expanded]="false"
+              [attr.data-dropdown-placement]="'bottom-end'"
               type="button"
-              aria-label="More post options"
-              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+              class="group inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-mainColor focus:outline-none focus:ring-4 focus:ring-blue-100"
+              aria-label="Open post options"
             >
-              <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+              <i
+                class="fa-solid fa-ellipsis-vertical text-base leading-none transition-transform duration-200 group-hover:scale-110"
+              ></i>
             </button>
+            <div
+              [id]="'post-menu-' + post._id"
+              class="absolute right-0 top-full z-20 mt-2 hidden w-44 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg ring-1 ring-slate-100"
+              [attr.aria-labelledby]="'post-menu-button-' + post._id"
+            >
+              <ul class="p-1.5 text-sm font-medium text-slate-600">
+                <li>
+                  <a
+                    href="#"
+                    class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-blue-50 hover:text-mainColor"
+                  >
+                    <i
+                      class="fa-regular fa-bookmark text-xs"
+                      aria-hidden="true"
+                    ></i>
+                    Save
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-blue-50 hover:text-mainColor"
+                  >
+                    <i
+                      class="fa-regular fa-pen-to-square text-xs"
+                      aria-hidden="true"
+                    ></i>
+                    Edit
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-50 hover:text-red-600"
+                  >
+                    <i
+                      class="fa-regular fa-trash-can text-xs"
+                      aria-hidden="true"
+                    ></i>
+                    Delete
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
           @if (post.body) {
             <p
@@ -124,12 +182,16 @@
               {{ post.body }}
             </p>
           }
-
-          @if (post.image) {
-            <img [src]="post.image" class="mt-4 rounded-lg" />
-          }
         </div>
       </div>
+      @if (post.image) {
+        <div class="flex justify-center px-4 pb-4 sm:px-5">
+          <img
+            [src]="post.image"
+            class="block max-w-full rounded-lg object-cover"
+          />
+        </div>
+      }
       <div
         class="mx-4 flex items-center justify-between gap-3 border-b border-slate-100 py-3 text-xs text-slate-500 sm:mx-5"
       >

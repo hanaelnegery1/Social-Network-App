@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { PostsService } from '../../../../core/auth/services/posts.service';
 import { Post } from '../../../../core/models/post.interface';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-content',
@@ -13,17 +14,19 @@ export class ContentComponent implements OnInit {
 
   postsData: Post[] = [];
 
-  currentUser = JSON.parse(localStorage.getItem('userData') || 'null');
+  currentUser: any = '';
 
   ngOnInit(): void {
     this.getAllPostsData();
+    const userData = localStorage.getItem('userData');
+    this.currentUser = userData ? JSON.parse(userData) : null;
   }
 
   getAllPostsData(): void {
     this.postsService.getAllPosts().subscribe({
       next: (res) => {
         this.postsData = res.data.posts;
-        console.log(res.data.posts);
+        setTimeout(() => initFlowbite(), 0);
       },
       error: (err) => {
         console.error(err);
