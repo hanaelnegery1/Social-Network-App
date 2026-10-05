@@ -8,14 +8,14 @@
         aria-hidden="true"
       >
         <img
-          [src]="currentUser?.photo"
+          [src]="userData?.photo"
           alt="User Name"
           class="h-full w-full object-cover rounded-full"
         />
       </div>
       <div class="min-w-0">
         <p class="truncate text-sm font-bold text-slate-800">
-          {{ currentUser?.name }}
+          {{ userData?.name }}
         </p>
         <div
           class="mt-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 text-xs font-medium text-slate-600"
@@ -107,13 +107,40 @@
                 <span aria-hidden="true">&middot;</span>
                 <span>{{ post.createdAt }}</span>
                 <span aria-hidden="true">&middot;</span>
-                <span class="inline-flex items-center gap-1"
-                  ><i
-                    class="fa-solid fa-earth-americas text-2xs"
-                    aria-hidden="true"
-                  ></i>
-                  {{ post.privacy }}</span
-                >
+                @if (post.user._id !== userId) {
+                  <span class="inline-flex items-center gap-1"
+                    ><i
+                      class="fa-solid text-2xs"
+                      [class.fa-earth-americas]="post.privacy === 'public'"
+                      [class.fa-user-group]="post.privacy === 'following'"
+                      [class.fa-lock]="post.privacy === 'only_me'"
+                      aria-hidden="true"
+                    ></i>
+                    {{ post.privacy }}</span
+                  >
+                }
+
+                @if (post.user._id === userId) {
+                  <div
+                    class="mt-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 text-xs font-medium text-slate-600"
+                  >
+                    <i
+                      class="fa-solid fa-earth-americas text-[11px]"
+                      aria-hidden="true"
+                    ></i>
+
+                    <div class="relative">
+                      <select
+                        class="appearance-none bg-transparent pr-4 text-xs font-medium text-slate-600 outline-none border-0"
+                        aria-label="Post visibility"
+                      >
+                        <option value="public">Public</option>
+                        <option value="following">Following</option>
+                        <option value="only_me">Only Me</option>
+                      </select>
+                    </div>
+                  </div>
+                }
               </p>
             </div>
             <button
@@ -147,30 +174,32 @@
                     Save
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-blue-50 hover:text-mainColor"
-                  >
-                    <i
-                      class="fa-regular fa-pen-to-square text-xs"
-                      aria-hidden="true"
-                    ></i>
-                    Edit
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-50 hover:text-red-600"
-                  >
-                    <i
-                      class="fa-regular fa-trash-can text-xs"
-                      aria-hidden="true"
-                    ></i>
-                    Delete
-                  </a>
-                </li>
+                @if (post.user._id === userId) {
+                  <li>
+                    <a
+                      href="#"
+                      class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-blue-50 hover:text-mainColor"
+                    >
+                      <i
+                        class="fa-regular fa-pen-to-square text-xs"
+                        aria-hidden="true"
+                      ></i>
+                      Edit
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-50 hover:text-red-600"
+                    >
+                      <i
+                        class="fa-regular fa-trash-can text-xs"
+                        aria-hidden="true"
+                      ></i>
+                      Delete
+                    </a>
+                  </li>
+                }
               </ul>
             </div>
           </div>
