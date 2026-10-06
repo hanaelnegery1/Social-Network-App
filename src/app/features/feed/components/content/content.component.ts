@@ -15,6 +15,8 @@ export class ContentComponent implements OnInit {
   postsData: Post[] = [];
   userData: User | null = null;
   userId: string = '';
+  saveFile!: File;
+  imageUrl: string | ArrayBuffer | null | undefined;
 
   ngOnInit(): void {
     this.getAllPostsData();
@@ -33,5 +35,25 @@ export class ContentComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  changeImage(e: Event): void {
+    const inputImage = e.target as HTMLInputElement;
+    if (inputImage.files) {
+      this.saveFile = inputImage.files[0];
+    }
+    this.getImageUrl();
+  }
+
+  getImageUrl(): void {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(this.saveFile);
+    fileReader.onload = (e: ProgressEvent<FileReader>) => {
+      this.imageUrl = e.target?.result;
+    };
+  }
+  removeImage(inputImage: HTMLInputElement): void {
+    this.imageUrl = null;
+    inputImage.value = '';
   }
 }

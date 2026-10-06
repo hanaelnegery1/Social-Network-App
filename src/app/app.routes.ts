@@ -19,9 +19,13 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     canActivate: [guestGuard],
     children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-      { path: 'forget', component: ForgotPasswordComponent },
+      { path: 'login', component: LoginComponent, title: 'Login' },
+      { path: 'register', component: RegisterComponent, title: 'Register' },
+      {
+        path: 'forget',
+        component: ForgotPasswordComponent,
+        title: 'Forgot Password',
+      },
     ],
   },
   {
@@ -29,10 +33,18 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'feed', component: FeedComponent },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'notification', component: NotificationComponent },
-      { path: 'change', component: ChangePasswordComponent },
+      { path: 'feed', component: FeedComponent, title: 'Feed Page' },
+      { path: 'profile', component: ProfileComponent, title: 'Profile' },
+      {
+        path: 'notification',
+        component: NotificationComponent,
+        title: 'Notifications',
+      },
+      {
+        path: 'change',
+        component: ChangePasswordComponent,
+        title: 'Change Password',
+      },
     ],
   },
   { path: '**', component: NotFoundComponent },
