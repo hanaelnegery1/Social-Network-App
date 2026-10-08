@@ -1,0 +1,96 @@
+<section class="rounded-[16px] bg-white p-4" aria-label="Comments">
+  <div class="mb-2 flex items-center gap-2">
+    <h3 class="text-[15px] font-bold text-slate-900">Comments</h3>
+    <span
+      class="rounded-full bg-blue-100 px-2 py-0.5 text-[12px] font-bold text-mainColor"
+      >1</span
+    >
+  </div>
+
+  <div class="group mb-4 flex gap-2">
+    <img
+      src="https://i.pravatar.cc/150?img=11"
+      alt="User Name"
+      class="mt-1 h-8 w-8 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
+    />
+
+    <div class="flex min-w-0 flex-1 flex-col items-start">
+      <div
+        class="max-w-full rounded-2xl rounded-tl-none bg-slate-100 px-3.5 py-2.5"
+      >
+        <div class="mb-0.5 flex items-center gap-1.5">
+          <span
+            class="cursor-pointer text-[13px] font-bold text-slate-900 hover:underline"
+            >User Name</span
+          >
+        </div>
+
+        <div class="mb-1 flex items-center gap-1 text-[12px] text-slate-500">
+          <span>@userName</span>
+          <span aria-hidden="true">&middot;</span>
+          <span>6s</span>
+        </div>
+
+        <p class="break-words text-[14px] text-slate-800">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, amet!
+        </p>
+      </div>
+
+      <div
+        class="ml-2 mt-1 flex items-center gap-3 text-[12px] font-semibold text-slate-500"
+      >
+        <span class="cursor-pointer hover:underline">6s</span>
+        <button class="cursor-pointer hover:underline">Like (0)</button>
+        <button class="cursor-pointer hover:underline">Reply</button>
+        <button
+          class="flex h-6 w-6 items-center justify-center rounded-full text-slate-400 opacity-0 transition hover:bg-slate-100 hover:text-slate-600 group-hover:opacity-100"
+          aria-label="More comment options"
+        >
+          <i class="fa-solid fa-ellipsis text-[11px]"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 flex gap-2">
+    <img
+      src="https://i.pravatar.cc/150?img=11"
+      alt="User Name"
+      class="mt-1 h-8 w-8 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
+    />
+
+    <div
+      class="flex flex-1 flex-col rounded-[20px] border border-slate-200 bg-slate-100 p-2 transition-all focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50"
+    >
+      <textarea
+        class="min-h-[60px] w-full resize-none border-0 bg-transparent px-2 pb-3 pt-1 text-[14px] text-slate-800 placeholder:text-slate-500 outline-none"
+        placeholder="Comment as ..."
+      ></textarea>
+
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-1">
+          <input type="file" id="comment-file" class="hidden" />
+          <label
+            for="comment-file"
+            class="group flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-slate-600 transition-colors hover:bg-slate-50"
+          >
+            <i
+              class="fa-regular fa-image text-[1.05rem] text-[#22c55e] transition-transform group-hover:scale-110"
+            ></i>
+            <span class="text-[14px] font-semibold text-slate-600"
+              >Photo/video</span
+            >
+          </label>
+        </div>
+
+        <button
+          type="button"
+          class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-400 text-white transition-colors hover:bg-blue-500"
+          aria-label="Send comment"
+        >
+          <i class="fa-solid fa-paper-plane text-[12px]"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
