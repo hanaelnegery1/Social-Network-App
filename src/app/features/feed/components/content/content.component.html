@@ -1,5 +1,7 @@
 <section aria-label="Your feed" class="min-w-0 space-y-4">
   <form
+    #form
+    (submit)="submitPost($event, form)"
     class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
   >
     <div class="flex items-center gap-3">
@@ -18,16 +20,20 @@
           {{ userData?.name }}
         </p>
         <div
-          class="mt-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 text-xs font-medium text-slate-600"
+          class="mt-1 inline-flex items-center rounded-full bg-slate-100 px-3 text-xs font-medium text-slate-600"
         >
           <i
-            class="fa-solid fa-earth-americas text-[11px]"
+            class="fa-solid text-2xs"
+            [class.fa-earth-americas]="privacyPost.value === 'public'"
+            [class.fa-user-group]="privacyPost.value === 'following'"
+            [class.fa-lock]="privacyPost.value === 'only_me'"
             aria-hidden="true"
           ></i>
 
           <div class="relative">
             <select
-              class="appearance-none bg-transparent pr-4 text-xs font-medium text-slate-600 outline-none border-0"
+              [formControl]="privacyPost"
+              class="appearance-none bg-transparent pr-6 text-xs font-medium text-slate-600 outline-none border-0"
               aria-label="Post visibility"
             >
               <option value="public">Public</option>
@@ -42,6 +48,7 @@
     <label class="sr-only" for="post-draft">Write a post</label>
     <textarea
       id="post-draft"
+      [formControl]="contentPost"
       rows="4"
       placeholder="What's on your mind, Hana?"
       class="mt-4 block w-full resize-y rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm leading-6 text-slate-700 outline-none placeholder:text-slate-400 focus:border-blue-300 focus:ring-4 focus:ring-blue-50"
@@ -90,8 +97,7 @@
         </label>
       </div>
       <button
-        type="button"
-        class="inline-flex items-center gap-2 rounded-lg bg-mainColor px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-900 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-200"
+        class="inline-flex items-center gap-2 rounded-lg bg-mainColor px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-900 focus:ring-4 focus:ring-blue-200 outline-none"
       >
         Post
         <i class="fa-regular fa-paper-plane" aria-hidden="true"></i>
@@ -128,35 +134,53 @@
                 <span>{{ post.createdAt }}</span>
                 <span aria-hidden="true">&middot;</span>
                 @if (post.user._id !== userId) {
-                  <span class="inline-flex items-center gap-1"
-                    ><i
+                  <span class="inline-flex items-center gap-1">
+                    <i
                       class="fa-solid text-2xs"
                       [class.fa-earth-americas]="post.privacy === 'public'"
                       [class.fa-user-group]="post.privacy === 'following'"
                       [class.fa-lock]="post.privacy === 'only_me'"
                       aria-hidden="true"
                     ></i>
-                    {{ post.privacy }}</span
-                  >
+                    {{ post.privacy }}
+                  </span>
                 }
 
                 @if (post.user._id === userId) {
                   <div
-                    class="mt-1 inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 text-xs font-medium text-slate-600"
+                    class="mt-1 inline-flex items-center rounded-full bg-slate-100 px-2 text-xs font-medium text-slate-600"
                   >
                     <i
-                      class="fa-solid fa-earth-americas text-[11px]"
+                      class="fa-solid text-[11px]"
+                      [class.fa-earth-americas]="post.privacy === 'public'"
+                      [class.fa-user-group]="post.privacy === 'following'"
+                      [class.fa-lock]="post.privacy === 'only_me'"
                       aria-hidden="true"
                     ></i>
 
                     <div class="relative">
                       <select
-                        class="appearance-none bg-transparent pr-4 text-xs font-medium text-slate-600 outline-none border-0"
+                        class="appearance-none bg-transparent pr-6 text-xs font-medium text-slate-600 outline-none border-0"
                         aria-label="Post visibility"
                       >
-                        <option value="public">Public</option>
-                        <option value="following">Following</option>
-                        <option value="only_me">Only Me</option>
+                        <option
+                          value="public"
+                          [selected]="post.privacy === 'public'"
+                        >
+                          Public
+                        </option>
+                        <option
+                          value="following"
+                          [selected]="post.privacy === 'following'"
+                        >
+                          Following
+                        </option>
+                        <option
+                          value="only_me"
+                          [selected]="post.privacy === 'only_me'"
+                        >
+                          Only Me
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -184,7 +208,6 @@
               <ul class="p-1.5 text-sm font-medium text-slate-600">
                 <li>
                   <a
-                    href="#"
                     class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-blue-50 hover:text-mainColor"
                   >
                     <i
@@ -197,7 +220,6 @@
                 @if (post.user._id === userId) {
                   <li>
                     <a
-                      href="#"
                       class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-blue-50 hover:text-mainColor"
                     >
                       <i
@@ -209,8 +231,8 @@
                   </li>
                   <li>
                     <a
-                      href="#"
                       class="inline-flex w-full items-center gap-2 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-50 hover:text-red-600"
+                      (click)="deletePost(post._id)"
                     >
                       <i
                         class="fa-regular fa-trash-can text-xs"
@@ -256,7 +278,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-1 p-2">
+      <div class="grid grid-cols-3 gap-1 p-2 border-b border-slate-100">
         <button
           type="button"
           class="inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-mainColor"
@@ -276,6 +298,8 @@
           <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>Share
         </button>
       </div>
+
+      <app-comment-post></app-comment-post>
     </article>
   }
 </section>
