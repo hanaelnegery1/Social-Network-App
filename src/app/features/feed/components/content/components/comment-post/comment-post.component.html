@@ -3,59 +3,75 @@
     <h3 class="text-[15px] font-bold text-slate-900">Comments</h3>
     <span
       class="rounded-full bg-blue-100 px-2 py-0.5 text-[12px] font-bold text-mainColor"
-      >1</span
+      >{{ commentsList.length }}</span
     >
   </div>
 
-  <div class="group mb-4 flex gap-2">
-    <img
-      src="https://i.pravatar.cc/150?img=11"
-      alt="User Name"
-      class="mt-1 h-8 w-8 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
-    />
+  @for (comment of commentsList; track comment._id) {
+    <div class="group mb-4 flex gap-2">
+      <img
+        [src]="comment.commentCreator.photo"
+        [alt]="comment.commentCreator.name"
+        class="mt-1 h-8 w-8 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
+      />
 
-    <div class="flex min-w-0 flex-1 flex-col items-start">
-      <div
-        class="max-w-full rounded-2xl rounded-tl-none bg-slate-100 px-3.5 py-2.5"
-      >
-        <div class="mb-0.5 flex items-center gap-1.5">
-          <span
-            class="cursor-pointer text-[13px] font-bold text-slate-900 hover:underline"
-            >User Name</span
-          >
-        </div>
-
-        <div class="mb-1 flex items-center gap-1 text-[12px] text-slate-500">
-          <span>@userName</span>
-          <span aria-hidden="true">&middot;</span>
-          <span>6s</span>
-        </div>
-
-        <p class="break-words text-[14px] text-slate-800">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, amet!
-        </p>
-      </div>
-
-      <div
-        class="ml-2 mt-1 flex items-center gap-3 text-[12px] font-semibold text-slate-500"
-      >
-        <span class="cursor-pointer hover:underline">6s</span>
-        <button class="cursor-pointer hover:underline">Like (0)</button>
-        <button class="cursor-pointer hover:underline">Reply</button>
-        <button
-          class="flex h-6 w-6 items-center justify-center rounded-full text-slate-400 opacity-0 transition hover:bg-slate-100 hover:text-slate-600 group-hover:opacity-100"
-          aria-label="More comment options"
+      <div class="flex min-w-0 flex-1 flex-col items-start">
+        <div
+          class="max-w-full rounded-2xl rounded-tl-none bg-slate-100 px-3.5 py-2.5"
         >
-          <i class="fa-solid fa-ellipsis text-[11px]"></i>
-        </button>
+          <div class="mb-0.5 flex items-center gap-1.5">
+            <span
+              class="cursor-pointer text-[13px] font-bold text-slate-900 hover:underline"
+              >{{ comment.commentCreator.name }}</span
+            >
+          </div>
+
+          <div class="mb-1 flex items-center gap-1 text-[12px] text-slate-500">
+            <span>@{{ comment.commentCreator.username }}</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>{{ comment.createdAt }}</span>
+          </div>
+
+          <p class="wrap-break-word text-[14px] text-slate-800">
+            {{ comment.content }}
+          </p>
+          @if (comment.image) {
+            <img
+              [src]="comment.image"
+              [alt]="comment.commentCreator.name + ' commented with an image'"
+              class="mt-2 h-auto rounded-lg border border-slate-200 bg-slate-100 object-cover"
+            />
+          }
+        </div>
+
+        <div
+          class="ml-2 mt-1 flex items-center gap-3 text-[12px] font-semibold text-slate-500"
+        >
+          <span class="cursor-pointer hover:underline">{{
+            comment.createdAt
+          }}</span>
+          <button class="cursor-pointer hover:underline">
+            {{ comment.likes.length }}
+          </button>
+          <button class="cursor-pointer hover:underline">Reply</button>
+          <button
+            class="flex h-6 w-6 items-center justify-center rounded-full text-slate-400 opacity-0 transition hover:bg-slate-100 hover:text-slate-600 group-hover:opacity-100"
+            aria-label="More comment options"
+          >
+            <i class="fa-solid fa-ellipsis text-[11px]"></i>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="mt-4 flex gap-2">
+  }
+  <form
+    #commentForm
+    (submit)="createComment($event, commentForm)"
+    class="mt-4 flex gap-2"
+  >
     <img
-      src="https://i.pravatar.cc/150?img=11"
-      alt="User Name"
+      [src]="userImage"
+      [alt]="userName"
       class="mt-1 h-8 w-8 shrink-0 rounded-full border border-slate-200 bg-slate-100 object-cover"
     />
 
@@ -63,13 +79,39 @@
       class="flex flex-1 flex-col rounded-[20px] border border-slate-200 bg-slate-100 p-2 transition-all focus-within:border-blue-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-50"
     >
       <textarea
-        class="min-h-[60px] w-full resize-none border-0 bg-transparent px-2 pb-3 pt-1 text-[14px] text-slate-800 placeholder:text-slate-500 outline-none"
+        name="content"
+        class="min-h-15 w-full resize-none border-0 bg-transparent px-2 pb-3 pt-1 text-[14px] text-slate-800 placeholder:text-slate-500 outline-none"
         placeholder="Comment as ..."
       ></textarea>
 
+      @if (commentImageUrl) {
+        <div class="relative mt-2">
+          <img
+            [src]="commentImageUrl"
+            alt="Selected comment image"
+            class="block h-auto max-h-52 w-full rounded-xl object-cover"
+          />
+          <button
+            type="button"
+            (click)="removeCommentImage(commentFileInput)"
+            class="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-slate-600 shadow-md ring-1 ring-black/5 transition hover:bg-red-50 hover:text-red-600"
+            aria-label="Remove selected image"
+          >
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      }
+
       <div class="flex items-center justify-between px-1">
         <div class="flex items-center gap-1">
-          <input type="file" id="comment-file" class="hidden" />
+          <input
+            #commentFileInput
+            type="file"
+            name="image"
+            id="comment-file"
+            class="hidden"
+            (change)="changeCommentImage($event)"
+          />
           <label
             for="comment-file"
             class="group flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-slate-600 transition-colors hover:bg-slate-50"
@@ -84,7 +126,7 @@
         </div>
 
         <button
-          type="button"
+          type="submit"
           class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-blue-400 text-white transition-colors hover:bg-blue-500"
           aria-label="Send comment"
         >
@@ -92,5 +134,5 @@
         </button>
       </div>
     </div>
-  </div>
+  </form>
 </section>

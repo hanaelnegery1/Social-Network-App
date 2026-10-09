@@ -286,6 +286,7 @@
           <i class="fa-regular fa-thumbs-up" aria-hidden="true"></i>Like
         </button>
         <button
+          #el
           type="button"
           class="inline-flex items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-mainColor"
         >
@@ -299,7 +300,9 @@
         </button>
       </div>
 
-      <app-comment-post></app-comment-post>
+      @defer (on interaction (el)) {
+        <app-comment-post [postId]="post._id"></app-comment-post>
+      }
     </article>
   }
 </section>
