@@ -25,6 +25,17 @@ export class CommentPostComponent implements OnInit {
     this.userName = storedUserData ? JSON.parse(storedUserData).name : null;
   }
 
+  getAllComments(): void {
+    this.commentsService.getPostComments(this.postId).subscribe({
+      next: (res) => {
+        this.commentsList = res.data.comments;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
   changeCommentImage(e: Event): void {
     const inputImage = e.target as HTMLInputElement;
     if (inputImage.files) {
@@ -44,17 +55,6 @@ export class CommentPostComponent implements OnInit {
   removeCommentImage(inputImage: HTMLInputElement): void {
     this.commentImageUrl = null;
     inputImage.value = '';
-  }
-
-  getAllComments(): void {
-    this.commentsService.getPostComments(this.postId).subscribe({
-      next: (res) => {
-        this.commentsList = res.data.comments;
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
   }
 
   createComment(e: Event, form: HTMLFormElement): void {
