@@ -11,6 +11,7 @@ import { FeedComponent } from './features/feed/feed.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 import { authGuard } from './core/auth/guards/auth-guard';
 import { guestGuard } from './core/auth/guards/guest-guard';
+import { DetailsComponent } from './features/details/details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,12 +20,12 @@ export const routes: Routes = [
     component: AuthLayoutComponent,
     canActivate: [guestGuard],
     children: [
-      { path: 'login', component: LoginComponent, title: 'Login' },
-      { path: 'register', component: RegisterComponent, title: 'Register' },
+      { path: 'login', component: LoginComponent, title: 'Login Page' },
+      { path: 'register', component: RegisterComponent, title: 'Register Page' },
       {
         path: 'forget',
         component: ForgotPasswordComponent,
-        title: 'Forgot Password',
+        title: 'Forgot Password Page',
       },
     ],
   },
@@ -34,17 +35,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'feed', component: FeedComponent, title: 'Feed Page' },
-      { path: 'profile', component: ProfileComponent, title: 'Profile' },
+      { path: 'profile', component: ProfileComponent, title: 'Profile Page' },
       {
         path: 'notification',
         component: NotificationComponent,
-        title: 'Notifications',
+        title: 'Notifications Page',
       },
       {
         path: 'change',
         component: ChangePasswordComponent,
-        title: 'Change Password',
+        title: 'Change Password Page',
       },
+      { path: 'details/:id' , component: DetailsComponent, title: 'Details Page' },
     ],
   },
   { path: '**', component: NotFoundComponent },

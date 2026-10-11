@@ -9,16 +9,9 @@ import { environment } from '../../../../../../../environments/environment';
 export class CommentsService {
   private readonly httpClient = inject(HttpClient);
 
-  headers: object = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('socialToken')}`,
-    },
-  };
-
   getPostComments(postId: string): Observable<any> {
     return this.httpClient.get(
       environment.baseUrl + `/posts/${postId}/comments?page=1&limit=10`,
-      this.headers,
     );
   }
 
@@ -26,7 +19,6 @@ export class CommentsService {
     return this.httpClient.post(
       environment.baseUrl + `/posts/${postId}/comments`,
       data,
-      this.headers,
     );
   }
 }

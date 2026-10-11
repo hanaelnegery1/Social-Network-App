@@ -4,10 +4,11 @@ import { Post, User } from '../../../../core/models/post.interface';
 import { initFlowbite } from 'flowbite';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommentPostComponent } from './components/comment-post/comment-post.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-content',
-  imports: [ReactiveFormsModule, CommentPostComponent],
+  imports: [ReactiveFormsModule, CommentPostComponent, RouterLink],
   templateUrl: './content.component.html',
   styleUrl: './content.component.css',
 })
@@ -57,6 +58,7 @@ export class ContentComponent implements OnInit {
       this.imageUrl = e.target?.result;
     };
   }
+
   removeImage(inputImage: HTMLInputElement): void {
     this.imageUrl = null;
     inputImage.value = '';
@@ -64,9 +66,6 @@ export class ContentComponent implements OnInit {
 
   submitPost(e: Event, form: HTMLFormElement): void {
     e.preventDefault();
-    console.log(this.contentPost.value);
-    console.log(this.privacyPost.value);
-    console.log(this.saveFile);
 
     const formData = new FormData();
 
@@ -82,7 +81,6 @@ export class ContentComponent implements OnInit {
 
     this.postsService.createPost(formData).subscribe({
       next: (res) => {
-        console.log(res);
         if (res.success) {
           form.reset();
           this.imageUrl = null;
@@ -98,7 +96,6 @@ export class ContentComponent implements OnInit {
   deletePost(postId: string): void {
     this.postsService.deletePost(postId).subscribe({
       next: (res) => {
-        console.log(res);
         if (res.success) {
           this.getAllPostsData();
         }
